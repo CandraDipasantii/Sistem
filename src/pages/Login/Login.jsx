@@ -1,21 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
+import { loginProses } from "../../services/service";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // --- contoh login sederhana ---
-    if (email === "admin@dago.com" && password === "123456") {
-      alert("Login berhasil!");
-      navigate("/pilihan-login"); // setelah login, ke halaman pilihan
-    } else {
-      alert("Email atau password salah!");
+  const { login, isLoggedIn } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
     }
+  }, [isLoggedIn]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData()
+
+    formData.append("email", email)
+    formData.append("password", password)
+
+    try{
+      const result = await loginProses(formData)
+      console.log(result);
+      login(result.access_token)
+      
+    }catch(error){
+      throw error
+    }
+    
   };
 
   return (

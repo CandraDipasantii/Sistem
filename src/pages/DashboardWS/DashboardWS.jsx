@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Images, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const meetingRooms = [
   {
@@ -122,6 +123,17 @@ const memberships = [
 const DashboardWS = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const { isLoggedIn, userProfile } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (userProfile.roles === "admin") {
+      navigate("/dashboardadmin");
+    } else if (userProfile.roles === "kasir") {
+      navigate("/mengelola-orderan_fb");
+    } else {
+      return;
+    }
+  }, [userProfile]);
 
   const filteredRooms = meetingRooms.filter((room) =>
     room.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -153,7 +165,6 @@ const DashboardWS = () => {
         </div>
 
         {/* Button */}
-
       </div>
 
       {/* Search Bar */}
@@ -172,26 +183,28 @@ const DashboardWS = () => {
       </div>
 
       {/* Membership Section */}
-{/* Membership Section */}
-<div className="flex items-center justify-between px-1 mb-4">
-  <h2 className="text-lg font-bold text-gray-800">
-    Paket Membership
-  </h2>
-  <div className="flex gap-3">
-    <button
-      onClick={() => navigate("/login")}
-      className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium shadow-md transition duration-200"
-    >
-      Login
-    </button>
-    <button
-      onClick={() => navigate("/daftar-member")}
-      className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium shadow-md transition duration-200"
-    >
-      Daftar Member
-    </button>
-  </div>
-</div>
+      {/* Membership Section */}
+      <div className="flex items-center justify-between px-1 mb-4">
+        <h2 className="text-lg font-bold text-gray-800">Paket Membership</h2>
+        <div className="flex gap-3">
+          {isLoggedIn ? (
+            ""
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium shadow-md transition duration-200"
+            >
+              Login
+            </button>
+          )}
+          <button
+            onClick={() => navigate("/daftar-member")}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full text-sm font-medium shadow-md transition duration-200"
+          >
+            Daftar Member
+          </button>
+        </div>
+      </div>
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-12">
         {memberships.map((member, index) => (

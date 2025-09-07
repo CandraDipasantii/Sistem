@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/images/logo.png";
+import { register } from "../../services/service";
 
 const DaftarAkun = () => {
   const [name, setName] = useState("");
@@ -9,7 +10,8 @@ const DaftarAkun = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    const formData = new FormData();
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -17,9 +19,24 @@ const DaftarAkun = () => {
       return;
     }
 
-    // --- contoh simpan akun sederhana ---
-    alert(`Akun berhasil dibuat untuk ${name}`);
-    navigate("/login"); // setelah daftar, kembali ke login
+    formData.append("nama", name);
+    formData.append("email", email);
+    formData.append("password", password);
+
+    try {
+      const result = await register(formData);
+      console.log(result.status);
+
+      if (result.status === 201) {
+        alert(`Akun berhasil dibuat untuk ${name}`);
+        navigate("/login");
+      } else {
+        alert("Gagal mendaftar: " + (result.data?.message || "Unknown error"));
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Terjadi error saat mendaftar");
+    }
   };
 
   return (
