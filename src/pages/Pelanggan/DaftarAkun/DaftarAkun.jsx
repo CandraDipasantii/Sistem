@@ -1,45 +1,41 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
-import { loginProses } from "../../services/service";
-import { AuthContext } from "../../providers/AuthProvider";
+import logo from "../../../assets/images/logo.png";
+import { register } from "../../../services/service";
 
-const Login = () => {
+const DaftarAkun = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // state untuk error
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  const { login, isLoggedIn, userProfile } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (isLoggedIn && userProfile) {
-      const role = userProfile.roles?.toLowerCase(); // normalisasi role
-
-      if (role === "admin_dago") {
-        navigate("/dashboardadmin", { replace: true });
-      } else if (role === "kasir") {
-        navigate("/mengelola-orderan_fb", { replace: true });
-      } else {
-        navigate("/dashboard-pengguna", { replace: true });
-      }
-    }
-  }, [isLoggedIn, userProfile, navigate]);
-
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setErrorMessage(""); // reset error sebelum login baru
-
     const formData = new FormData();
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Password tidak sama!");
+      return;
+    }
+
+    formData.append("nama", name);
     formData.append("email", email);
     formData.append("password", password);
 
     try {
-      const result = await loginProses(formData);
-      login(result.access_token); // update context & fetch profile
+      const result = await register(formData);
+      console.log(result.status);
+
+      if (result.status === 201) {
+        alert(`Akun berhasil dibuat untuk ${name}`);
+        navigate("/login");
+      } else {
+        alert("Gagal mendaftar: " + (result.data?.message || "Unknown error"));
+      }
     } catch (error) {
-      console.error("Login gagal:", error);
-      setErrorMessage("Email atau password salah. Silakan coba lagi.");
+      console.error(error);
+      alert("Terjadi error saat mendaftar");
     }
   };
 
@@ -57,21 +53,28 @@ const Login = () => {
 
         {/* Title */}
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">
-          Login
+          Daftar Akun
         </h2>
         <p className="text-gray-500 text-center mb-6">
-          Masuk untuk mengakses akun Anda
+          Buat akun baru untuk mulai menggunakan layanan
         </p>
-
-        {/* Error Message */}
-        {errorMessage && (
-          <div className="bg-red-100 text-red-600 p-3 rounded-lg text-sm mb-4 text-center">
-            {errorMessage}
-          </div>
-        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Nama Lengkap
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-3 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Nama lengkap"
+              required
+            />
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -100,22 +103,36 @@ const Login = () => {
             />
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Konfirmasi Password
+            </label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full px-4 py-3 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="********"
+              required
+            />
+          </div>
+
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-medium shadow-md transition duration-200"
+            className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-medium shadow-md transition duration-200"
           >
-            Login
+            Daftar
           </button>
         </form>
 
-        {/* Link ke daftar akun */}
+        {/* Link ke login */}
         <p className="text-sm text-gray-600 text-center mt-6">
-          Belum punya akun?{" "}
+          Sudah punya akun?{" "}
           <button
-            onClick={() => navigate("/daftar-akun")}
+            onClick={() => navigate("/login")}
             className="text-blue-500 hover:underline font-medium"
           >
-            Daftar Akun
+            Login
           </button>
         </p>
       </div>
@@ -123,4 +140,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default DaftarAkun;

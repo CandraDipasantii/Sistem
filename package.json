@@ -10,15 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^6.0.1",
     "@tailwindcss/vite": "^4.1.12",
-    "antd": "^5.27.1",
+    "antd": "^5.27.3",
+    "chart.js": "^4.5.0",
     "encrypt-storage": "^2.14.7",
     "lucide-react": "^0.542.0",
+    "moment": "^2.30.1",
     "react": "^19.1.1",
     "react-calendar": "^6.0.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-day-picker": "^9.9.0",
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",
+    "react-qr-code": "^2.0.18",
     "react-router-dom": "^7.8.2",
+    "swiper": "^11.2.10",
     "tailwindcss": "^4.1.12"
   },
   "devDependencies": {

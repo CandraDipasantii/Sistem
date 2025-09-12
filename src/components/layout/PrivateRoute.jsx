@@ -1,9 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
-import Login from "../../pages/Login/Login";
+import { Navigate, useLocation } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
-  const { isLoggedIn, loading } = useContext(AuthContext);
+  const { isLoggedIn, loading, userProfile } = useContext(AuthContext);
+  const location = useLocation();
+  console.log(userProfile);
+  
 
   if (loading) {
     return (
@@ -17,7 +20,8 @@ const PrivateRoute = ({ children }) => {
     return children;
   }
 
-  return <Login />;
+  // Redirect ke login, simpan lokasi sebelumnya biar bisa balik setelah login
+  return <Navigate to="/login" state={{ from: location }} replace />;
 };
 
 export default PrivateRoute;
