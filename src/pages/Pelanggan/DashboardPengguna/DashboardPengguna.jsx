@@ -12,7 +12,7 @@ import RiwayatTransaksi from "../RiwayatTransaksi/RiwayatTransaksi";
 import VirtualOffice from "../VirtualOffice/VirtualOffice";
 import Membership from "../Membership/Membership";
 
-const DashboardPengguna = () => {
+const DashboardPengguna = ({children}) => {
   const location = useLocation();
   const [activeMenu, setActiveMenu] = useState(
     location.state?.activeMenu || "informasi-ruangan"
@@ -27,7 +27,7 @@ const DashboardPengguna = () => {
   };
 
   const menuItems = [
-    { key: "informasi-ruangan", label: "Pesan Ruangan", icon: <Diamond size={20} /> },
+    { key: "informasi-ruangan", label: "Pesan Ruangan", icon: <Diamond size={20} />, path:"/infromasi-ruangan" },
     { key: "membership", label: "Membership", icon: <Users size={20} /> },
     { key: "virtual-office", label: "Virtual Office", icon: <Building size={20} /> },
     { key: "cek-kredit-membership", label: "Cek Kredit Membership", icon: <CreditCard size={20} /> },

@@ -14,6 +14,8 @@ import {
 import moment from "moment";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { formatRupiahPerJam } from "../../../utils/formatRupiah";
+const baseUrl = import.meta.env.VITE_BASE_URL
 
 // --------------------- Data ---------------------
 const meetingRooms = [
@@ -93,6 +95,14 @@ const RoomDetail = () => {
     );
   }
 
+  console.log({roomnya: room});
+  console.log(meetingRooms);
+  console.log(spaceMonitors);
+  console.log(location.state);
+  
+  
+  
+
   // --------------------- State Booking ---------------------
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedStartTime, setSelectedStartTime] = useState(null);
@@ -117,8 +127,12 @@ const RoomDetail = () => {
 
   // --------------------- Hitung Harga ---------------------
   const calculateTotalPrice = () => {
-    const hourlyRate = Number(room.price) || 0;
+    const hourlyRate = Number(room.harga_per_jam) || 0;
     const dur = Number(duration) || 0;
+
+    console.log(hourlyRate);
+    console.log(dur);
+    
     return hourlyRate * dur;
   };
 
@@ -149,15 +163,15 @@ const RoomDetail = () => {
             <div>
               <div className="w-full h-[300px] sm:h-[400px] rounded-xl overflow-hidden mb-4">
                 <img
-                  src={room.mainImage}
+                  src={`${baseUrl}/static/${room.gambar_ruangan}`}
                   alt={room.name}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="space-y-4">
-                <p className="text-gray-600">{room.description}</p>
+                <p className="text-gray-600">{room.description_ruangan}</p>
                 <p className="text-blue-600 font-semibold">
-                  {room.price.toLocaleString()}
+                  {formatRupiahPerJam(room.harga_per_jam)}
                 </p>
 
                 {/* Facilities or Features */}
@@ -347,7 +361,7 @@ const RoomDetail = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-semibold">Harga / jam:</span>
-                  <span>Rp{room.price.toLocaleString()}</span>
+                  <span>{formatRupiahPerJam(room.harga_per_jam)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-semibold">Total:</span>

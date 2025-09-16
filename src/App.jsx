@@ -28,7 +28,20 @@ import Membership from "./pages/Pelanggan/Membership/Membership";
 import SpaceRental from "./pages/Admin/SpaceRental/SpaceRental";
 import { TranslationOutlined } from "@ant-design/icons";
 import MasterData from "./pages/Admin/MasterData/MasterData";
-
+import SidebarAdmin from "./pages/Admin/DashboardAdmin/SidebarAdmin";
+import DashboardAdmins from "./pages/Admin/DashboardAdmin/DashboardAdmins";
+import TransaksiAdmin from "./pages/Admin/TransaksiAdmin/TransaksiAdmin";
+import SidebarTenant from "./pages/Tenant/SidebarTenant/SidebarTenant";
+import DashboardTenant from "./pages/Tenant/DashboardTenant/DashboardTenant";
+import SettingTenant from "./pages/Tenant/SettingTenant/SettingTenant";
+import KelolaStok from "./pages/Tenant/KelolaStok/KelolaStok";
+import SidebarKasir from "./pages/Kasir/SidebarKasir/SidebarKasir";
+import TransaksiKasir from "./pages/Kasir/TransaksiKasir/TransaksiKasir";
+import MerchantKasir from "./pages/Kasir/MerchantKasir/MerchantKasir";
+import ProductKasir from "./pages/Kasir/ProductKasir/ProductKasir";
+import HistoryKasir from "./pages/Kasir/HistoryKasir/HistoryKasir";
+import SpaceKasir from "./pages/Kasir/SpaceKasir/SpaceKasir";
+import SettingsKasir from "./pages/Kasir/SettingsKasir/SettingsKasir";
 
 const App = () => {
   return (
@@ -169,93 +182,152 @@ const App = () => {
           path="/dashboardadmin"
           element={
             <PrivateRoute>
-              {" "}
-              <DashboardAdmin />{" "}
+              <SidebarAdmin>
+                <DashboardAdmins />
+              </SidebarAdmin>
             </PrivateRoute>
           }
         />
 
         <Route
-          path="/riwayatpesanan"
+          path="/spacerentaladmin"
           element={
             <PrivateRoute>
-              {" "}
-              <RiwayatPesanan />
+              <SidebarAdmin>
+                <SpaceRental />
+              </SidebarAdmin>
             </PrivateRoute>
           }
         />
 
         <Route
-          path="/pengelolauser"
+          path="/transaksiadmin"
           element={
             <PrivateRoute>
-              {" "}
-              <PengelolaUser />
+              <SidebarAdmin>
+                <TransaksiAdmin />
+              </SidebarAdmin>
             </PrivateRoute>
           }
         />
 
         <Route
-          path="/pengelolaruangan"
+          path="masterdataadmin"
           element={
             <PrivateRoute>
-              {" "}
-              <PengelolaRuangan />
+              <SidebarAdmin>
+                <MasterData />
+              </SidebarAdmin>
             </PrivateRoute>
           }
         />
 
+        {/* Admin Tenant */}
         <Route
-          path="/mengelola-orderan_fb"
+          path="/ordertenant"
           element={
             <PrivateRoute>
-              <MainKasir>
-                <MengelolaOrderF_B />
-              </MainKasir>
+              <SidebarTenant>
+                <DashboardTenant />
+              </SidebarTenant>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/stoktenant"
+          element={
+            <PrivateRoute>
+              <SidebarTenant>
+                <KelolaStok />
+              </SidebarTenant>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/settingstenant"
+          element={
+            <PrivateRoute>
+              <SidebarTenant>
+                <SettingTenant />
+              </SidebarTenant>
             </PrivateRoute>
           }
         />
 
+        {/* Admin Kasir */}
         <Route
-          path="/mengelola-booking-ruangan"
+          path="/transaksikasir"
           element={
             <PrivateRoute>
-              <MainKasir>
-                <MengelolaBookingRuangan />
-              </MainKasir>
+              <SidebarKasir>
+                <TransaksiKasir />
+              </SidebarKasir>
             </PrivateRoute>
           }
         />
         <Route
-          path="/space-rental"
+          path="/merchantkasir"
           element={
             <PrivateRoute>
-              {" "}
-              <SpaceRental />
+              <SidebarKasir>
+                <MerchantKasir />
+              </SidebarKasir>
             </PrivateRoute>
           }
         />
         <Route
-          path="/transaksi-admin"
+          path="/productkasir"
           element={
             <PrivateRoute>
-              {" "}
-              <TranslationOutlined />
+              <SidebarKasir>
+                <ProductKasir />
+              </SidebarKasir>
             </PrivateRoute>
           }
         />
         <Route
-          path="/master-data"
+          path="/historykasir"
           element={
             <PrivateRoute>
-              {" "}
-              <MasterData />
+              <SidebarKasir>
+                <HistoryKasir />
+              </SidebarKasir>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/spacekasir"
+          element={
+            <PrivateRoute>
+              <SidebarKasir>
+                <SpaceKasir />
+              </SidebarKasir>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/settingskasir"
+          element={
+            <PrivateRoute>
+              <SidebarKasir>
+                <SettingsKasir />
+              </SidebarKasir>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Pelanggan */}
+        <Route
+          path="/informasi-ruangan"
+          element={
+            <PrivateRoute>
+              <DashboardPengguna>
+                <InformasiRuangan />
+              </DashboardPengguna>
             </PrivateRoute>
           }
         />
       </Routes>
-
-
     </AuthProvider>
   );
 };

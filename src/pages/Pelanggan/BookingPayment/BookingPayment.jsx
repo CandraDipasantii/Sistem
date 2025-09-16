@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import moment from "moment";
+import { AuthContext } from "../../../providers/AuthProvider";
+import { postTransaksiRuangan } from "../../../services/service";
 
 const BookingPayment = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { userProfile } = useContext(AuthContext);
 
   const {
     room,
@@ -24,20 +27,60 @@ const BookingPayment = () => {
   if (!location.state) return null;
 
   const calculateTotalPrice = () => {
-    const serviceFee = 25000;
-    return room.price * duration + serviceFee;
+    return room.harga_per_jam * duration;
   };
 
   const formattedDate = moment(selectedDate).format("DD MMMM YYYY");
   const formattedStartTime = selectedStartTime || "-";
   const formattedEndTime = selectedEndTime || "-";
 
+  console.log(selectedDate);
+  console.log(selectedStartTime);
+
+  const handleInputTransaksi = async () => {
+    try {
+      const startDateTime = moment(selectedDate)
+        .set("hour", selectedStartTime)
+        .set("minute", 0)
+        .format("YYYY-MM-DD HH:mm:ss");
+
+      const endDateTime = moment(selectedDate)
+        .set("hour", selectedEndTime)
+        .set("minute", 0)
+        .format("YYYY-MM-DD HH:mm:ss");
+
+      const res = await postTransaksiRuangan(
+        userProfile?.id_user || 1, // ambil dari context (fallback 1)
+        room.id_ruangan, // id ruangan
+        startDateTime,
+        endDateTime,
+        "qris", // metode pembayaran
+        calculateTotalPrice(), // total harga
+        name
+      );
+
+      console.log("Transaksi sukses:", res);
+
+      // bisa redirect atau kasih notifikasi sukses
+      navigate("/riwayat-transaksi", {
+        state: {
+          transaksi: res,
+        },
+      });
+    } catch (error) {
+      console.error("Gagal input transaksi:", error);
+      alert("Transaksi gagal, coba lagi.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 max-w-lg w-full">
         {/* Header */}
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Scan QR Code</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Scan QR Code
+          </h2>
           <p className="text-gray-600 text-sm mb-8 leading-relaxed">
             Gunakan aplikasi e-wallet untuk <br /> scan dan bayar dengan QRIS
           </p>
@@ -52,7 +95,9 @@ const BookingPayment = () => {
 
         {/* Booking Details */}
         <div className="bg-gray-50 p-6 rounded-xl space-y-4">
-          <h3 className="font-bold text-lg mb-2 text-center">Detail Pemesanan</h3>
+          <h3 className="font-bold text-lg mb-2 text-center">
+            Detail Pemesanan
+          </h3>
           <div className="flex justify-between items-center text-gray-700">
             <span className="font-medium">Ruangan</span>
             <span className="font-semibold">{room.name}</span>
@@ -96,17 +141,17 @@ const BookingPayment = () => {
             Batal
           </button>
           <Link
-            to="/booking-sukses"
+            to="/riwayat-transaksi"
             state={{
               name,
-              roomName: room.name,
+              roomName: room.nama_ruangan,
               totalPrice: calculateTotalPrice(),
               date: formattedDate,
               startTime: formattedStartTime,
               endTime: formattedEndTime,
             }}
           >
-            <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-full font-semibold shadow-md transition">
+            <button onClick={handleInputTransaksi} className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-full font-semibold shadow-md transition">
               Cek Status
             </button>
           </Link>

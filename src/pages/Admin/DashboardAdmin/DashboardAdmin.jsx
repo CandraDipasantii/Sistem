@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Children, useContext, useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../providers/AuthProvider";
@@ -30,14 +30,14 @@ ChartJS.register(
   LineElement
 );
 
-const DashboardAdmin = ({}) => {
+const DashboardAdmin = ({ children }) => {
   const [selectedMenu, setSelectedMenu] = useState("Dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const { userProfile } = useContext(AuthContext);
 
   useEffect(() => {
-    if (userProfile.roles !== "admin_dago") {
+    if (userProfile.roles !== "Admin_dago") {
       navigate("/");
     }
   }, [userProfile]);
@@ -47,7 +47,7 @@ const DashboardAdmin = ({}) => {
 
 
   const menuItems = [
-    { name: "Dashboard", icon: <BsGraphUpArrow /> },
+    { name: "Dashboard", icon: <BsGraphUpArrow />, path:"/" },
     { name: "Space Rental", icon: <MdChair /> },
     { name: "Transaksi", icon: <BsCart3 /> },
     { name: "Master Data", icon: <FaDatabase /> },
@@ -150,40 +150,7 @@ const DashboardAdmin = ({}) => {
 
         {/* Dashboard Content */}
         <div className="p-6 bg-gray-50 min-h-screen overflow-y-auto">
-          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <Card className="shadow-md">
-              <h2 className="text-xl font-bold mb-4">
-                Top Sale: Rp {topSale.toLocaleString()}
-              </h2>
-              <Pie data={topSaleData} />
-            </Card>
-            <Card className="shadow-md">
-              <h2 className="text-lg font-semibold mb-4">Category (IDR)</h2>
-              <Pie data={categoryData} />
-            </Card>
-            <Card className="shadow-md overflow-x-auto">
-              <h2 className="text-lg font-semibold mb-4">Top 10 Product</h2>
-              <Table
-                dataSource={dataSource}
-                columns={columns}
-                pagination={false}
-                size="small"
-              />
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="shadow-md">
-              <h2 className="text-lg font-semibold mb-4">Daily Selling</h2>
-              <Line data={dailySelling} />
-            </Card>
-            <Card className="shadow-md">
-              <h2 className="text-lg font-semibold mb-4">
-                Profit Summary (6 Months)
-              </h2>
-              <Bar data={profitSummary} />
-            </Card>
-          </div> */}
+              {children}
         </div>
       </div>
     </div>
